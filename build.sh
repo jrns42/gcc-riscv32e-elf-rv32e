@@ -1,12 +1,19 @@
-#!/bin/bash
-export __OPT_MULTICORE=-j4
+#!/bin/bash -e
+export __OPT_MULTICORE=-j$(nproc)
 export __OPT_BOOTSTRAP=--enable-bootstrap
-export __OPT_TARGET_PATH=/usr/local/riscv32e
 export __OPT_TARGET_ARCH=riscv32-unknown-elf
 export __OPT_TARGET_MARCH=rv32e
 export __OPT_TARGET_MARCH_FULL=rv32emac
 export __OPT_TARGET_MABI=ilp32e
 
+if [[ $# = 0 ]]; then
+    export __OPT_TARGET_PATH=/usr/local/riscv32e
+elif [[ $# = 1 ]]; then
+    export __OPT_TARGET_PATH="$1"
+else
+    echo "too many arguments"
+    exit 1
+fi
 export PATH=$PATH:${__OPT_TARGET_PATH}/bin
 
 git config --global core.autocrlf input
